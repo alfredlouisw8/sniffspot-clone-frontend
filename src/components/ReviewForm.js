@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 function ReviewForm({
 	spot_id,
 	setShowReviewForm,
-	method,
+	action,
 	review,
 	handleReviewUpdate,
 	handleReviewCreate,
