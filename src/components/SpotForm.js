@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
-	price: Yup.number().required("Required"),
+	price: Yup.number().typeError("must be a number").required("Required"),
 	images: Yup.mixed(),
 });
 
@@ -28,14 +28,17 @@ function SpotForm({ spot, action }) {
 			}}
 			enableReinitialize={true}
 			validationSchema={validationSchema}
-			onSubmit={(values) => {
+			onSubmit={async (values) => {
 				// same shape as initial values
 
 				const formData = new FormData();
 
 				Object.keys(values).forEach((key) => {
 					if (key === "images") {
-						if (spot && spot.images !== values.images) {
+						if (
+							(spot && spot.images !== values.images) ||
+							action === "create"
+						) {
 							for (let i = 0; i < values[key].length; i++) {
 								formData.append("spot[images][]", values[key][i]);
 							}
@@ -46,10 +49,10 @@ function SpotForm({ spot, action }) {
 				});
 
 				if (action === "create") {
-					axios.post("/spots", formData);
-					//navigate("/");
+					await axios.post("/spots", formData);
+					navigate("/");
 				} else if (action === "update") {
-					axios.put("/spots/" + spot.id, formData);
+					await axios.put("/spots/" + spot.id, formData);
 					navigate("/spots/" + spot.id);
 				}
 			}}

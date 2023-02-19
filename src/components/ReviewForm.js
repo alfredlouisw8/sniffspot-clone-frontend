@@ -12,6 +12,7 @@ const validationSchema = Yup.object().shape({
 		.max(100, "Too Long!")
 		.required("Required"),
 	point: Yup.number()
+		.typeError("must be a number")
 		.min(1, "Min is 0")
 		.max(5, "Max is 5")
 		.required("Required"),
